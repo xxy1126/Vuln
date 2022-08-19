@@ -1,4 +1,4 @@
-# Tenda M3 contains Stack Overflow Vulnerability
+# Tenda M3 contains Stack Buffer Overflow Vulnerability
 
 ## overview
 
@@ -16,7 +16,7 @@
 
 ### 1. Vulnerability Details
 
-the `httpd` in directory `/bin` has a stack overflow. The vunlerability is in fucntion `R7WebsSecurityHandler` 
+the `httpd` in directory `/bin` has a stack buffer overflow. The vunlerability is in fucntion `R7WebsSecurityHandler` 
 
 ![image-20220819012934119](readme.assets/image-20220819012934119.png)
 

